@@ -5,6 +5,8 @@ import CitySearch from './components/CitySearch';
 import WeatherCard from './components/WeatherCard';
 import ForecastCard from './components/ForecastCard';
 import LifeAdvice from './components/LifeAdvice';
+import RainEffect from './components/RainEffect';
+import SunEffect from './components/SunEffect';
 import { WeatherData, ForecastData, LifeAdvice as LifeAdviceType } from '@/types/weather';
 import { generateAllAdvice } from '@/utils/lifeAdvice';
 import { getBackgroundClass } from '@/utils/backgroundSelector';
@@ -95,8 +97,84 @@ export default function Home() {
     ? getBackgroundClass(weather.icon, weather.description)
     : 'bg-default-day';
 
+  // 判断是否显示雨效果
+  const isRaining = weather && (
+    weather.description.toLowerCase().includes('雨') ||
+    weather.description.toLowerCase().includes('rain') ||
+    weather.icon.includes('09') ||
+    weather.icon.includes('10')
+  );
+
+  // 根据天气图标判断雨势强度
+  const getRainIntensity = (): 'light' | 'moderate' | 'heavy' => {
+    if (!weather) return 'moderate';
+    const desc = weather.description.toLowerCase();
+    
+    // 小雨
+    if (desc.includes('小雨') || desc.includes('light rain') || desc.includes('drizzle')) {
+      return 'light';
+    }
+    // 大雨/暴雨
+    if (desc.includes('大雨') || desc.includes('暴雨') || desc.includes('heavy') || 
+        weather.icon.includes('09')) {
+      return 'heavy';
+    }
+    // 中雨（默认）
+    return 'moderate';
+  };
+
+  // 判断是否显示太阳特效（晴天）
+  const isClearSky = weather && (
+    weather.description.toLowerCase().includes('晴') ||
+    weather.description.toLowerCase().includes('clear') ||
+    weather.icon.includes('01')
+  );
+
+  // 根据时间判断太阳的显示模式
+  const getTimeOfDay = (): 'sunrise' | 'day' | 'sunset' | 'night' => {
+    if (!weather) return 'day';
+    
+    const now = Date.now() / 1000; // 当前时间戳（秒）
+    const sunrise = weather.sunrise;
+    const sunset = weather.sunset;
+    
+    // 日出前后 1 小时
+    const sunriseWindow = 3600; // 1小时 = 3600秒
+    const sunsetWindow = 3600;
+    
+    // 判断是否在日出时段
+    if (now >= sunrise - sunriseWindow && now <= sunrise + sunriseWindow) {
+      return 'sunrise';
+    }
+    
+    // 判断是否在日落时段
+    if (now >= sunset - sunsetWindow && now <= sunset + sunsetWindow) {
+      return 'sunset';
+    }
+    
+    // 判断是否为夜晚
+    if (now < sunrise || now > sunset) {
+      return 'night';
+    }
+    
+    // 白天
+    return 'day';
+  };
+
   return (
     <div className={`min-h-screen transition-all duration-1000 ${backgroundClass}`}>
+      {/* 下雨特效 */}
+      {isRaining && <RainEffect intensity={getRainIntensity()} />}
+      
+      {/* 太阳特效（晴天） */}
+      {isClearSky && (
+        <SunEffect 
+          timeOfDay={getTimeOfDay()} 
+          sunriseTime={weather?.sunrise}
+          sunsetTime={weather?.sunset}
+        />
+      )}
+      
       <div className="min-h-screen backdrop-blur-sm bg-black/10">
         <div className="container mx-auto px-4 py-8">
           {/* 页面标题 */}

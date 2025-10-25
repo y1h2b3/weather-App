@@ -188,3 +188,78 @@ body {
   background: rgba(255, 255, 255, 0.3);
   color: white;
 }
+
+/* 雨滴下落动画 */
+@keyframes rainFall {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* 太阳发光动画 */
+@keyframes sun-glow {
+  0%, 100% {
+    box-shadow: 0 0 40px rgba(255, 200, 0, 0.8),
+                0 0 80px rgba(255, 150, 0, 0.5),
+                0 0 120px rgba(255, 100, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(255, 200, 0, 1),
+                0 0 100px rgba(255, 150, 0, 0.7),
+                0 0 150px rgba(255, 100, 0, 0.5);
+  }
+}
+
+.animate-sun-glow {
+  animation: sun-glow 3s ease-in-out infinite;
+}
+
+/* 太阳光芒脉动 */
+@keyframes sunRayPulse {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scaleY(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* 漂浮动画 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 1;
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* 径向渐变背景（Tailwind 默认不支持） */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
