@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* 玻璃态卡片样式 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 天气背景 - 白天晴天 */
+.bg-clear-day {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  animation: gradientShift 15s ease infinite;
+}
+
+/* 天气背景 - 夜晚晴天 */
+.bg-clear-night {
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  animation: gradientShift 20s ease infinite;
+}
+
+/* 天气背景 - 白天多云 */
+.bg-cloudy-day {
+  background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%);
+  animation: gradientShift 12s ease infinite;
+}
+
+/* 天气背景 - 夜晚多云 */
+.bg-cloudy-night {
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  animation: gradientShift 15s ease infinite;
+}
+
+/* 天气背景 - 雨天 */
+.bg-rainy {
+  background: linear-gradient(135deg, #373b44 0%, #4286f4 50%, #373b44 100%);
+  animation: rain 3s linear infinite, gradientShift 10s ease infinite;
+}
+
+/* 天气背景 - 雷暴 */
+.bg-thunderstorm {
+  background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+  animation: thunder 4s ease-in-out infinite, gradientShift 8s ease infinite;
+}
+
+/* 天气背景 - 雪天 */
+.bg-snowy {
+  background: linear-gradient(135deg, #e6dada 0%, #274046 100%);
+  animation: snow 20s linear infinite, gradientShift 15s ease infinite;
+}
+
+/* 天气背景 - 雾/霧霾 */
+.bg-misty {
+  background: linear-gradient(135deg, #606c88 0%, #3f4c6b 100%);
+  animation: gradientShift 10s ease infinite;
+}
+
+/* 天气背景 - 默认白天 */
+.bg-default-day {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  animation: gradientShift 15s ease infinite;
+}
+
+/* 天气背景 - 默认夜晚 */
+.bg-default-night {
+  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  animation: gradientShift 15s ease infinite;
+}
+
+/* 渐变动画 */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* 下雨效果 */
+@keyframes rain {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+/* 闪电效果 */
+@keyframes thunder {
+  0%, 90%, 100% {
+    opacity: 1;
+  }
+  92%, 94%, 96% {
+    opacity: 0.8;
+  }
+}
+
+/* 下雪效果 */
+@keyframes snow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* 从下到上滑入动画 */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .glass-card {
+    border-radius: 16px;
+  }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 文本选中样式 */
+::selection {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
