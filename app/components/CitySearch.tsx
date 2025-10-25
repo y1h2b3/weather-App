@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useAmapGeolocation } from '../hooks/useAmapGeolocation';
 
 interface CitySearchProps {
   onSearch: (city: string) => void;
@@ -20,8 +21,10 @@ export default function CitySearch({ onSearch, onLocationSearch, loading }: City
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [gettingLocation, setGettingLocation] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // 使用高德定位Hook
+  const { getCurrentPosition, loading: gettingLocation } = useAmapGeolocation();
 
   // 防抖搜索
   useEffect(() => {
@@ -85,24 +88,26 @@ export default function CitySearch({ onSearch, onLocationSearch, loading }: City
     }
   };
 
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert('您的浏览器不支持地理定位');
-      return;
-    }
-
-    setGettingLocation(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        onLocationSearch(position.coords.latitude, position.coords.longitude);
-        setGettingLocation(false);
-      },
-      (error) => {
-        console.error('获取位置失败:', error);
-        alert('获取位置失败，请检查浏览器权限设置');
-        setGettingLocation(false);
+  const handleGetLocation = async () => {
+    try {
+      const result = await getCurrentPosition();
+      if (result) {
+        // 高德定位成功，使用返回的经纬度
+        onLocationSearch(result.lat, result.lon);
+        console.log('高德定位成功:', result.city, result.province);
+      } else {
+        alert('定位失败，请检查浏览器权限或手动输入城市');
       }
-    );
+    } catch (error: any) {
+      console.error('高德定位异常:', error);
+      
+      // 判断是否是权限被拒
+      if (error.message?.includes('permission denied')) {
+        alert('浏览器定位权限被拒绝。请点击地址栏左侧的锁图标，允许“位置”权限，然后刷新页面。');
+      } else {
+        alert(error.message || '定位失败，请手动输入城市');
+      }
+    }
   };
 
   return (
