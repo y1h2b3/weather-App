@@ -77,7 +77,7 @@ export default function Home() {
   // 处理地理定位搜索
   const handleLocationSearch = async (lat: number, lon: number) => {
     try {
-      // 获取城市名称
+      // 高德定位已经返回了城市名，但我们仍使用OpenWeatherMap的反向地理编码确保一致性
       const geoResponse = await fetch(`/api/reverse-geocode?lat=${lat}&lon=${lon}`);
       if (geoResponse.ok) {
         const geoData = await geoResponse.json();
